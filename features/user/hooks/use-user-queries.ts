@@ -1,11 +1,10 @@
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {toast} from "sonner";
-import UserService from "@/features/user/services/user.service";
-import userService from "@/features/user/services/user.service";
+import UserService from "@/features/user/services/user.service.mock";
+import {onQueryError} from "@/lib/utils";
 import {UserTypes} from "@/types/features/user.type";
 import type {HttpClientTypes} from "@/types/lib/http-client.type";
 import type {Query} from "@/types/lib/query.type";
-import {onQueryError} from "@/lib/utils";
 import CreateUserRequest = UserTypes.Service.CreateUserRequest;
 import UpdateUserRequest = UserTypes.Service.UpdateUserRequest;
 
@@ -61,7 +60,7 @@ export function useDeleteUser() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => userService.deleteUser(id),
+    mutationFn: (id: string) => UserService.deleteUser(id),
     onSuccess: async (res) => {
       await queryClient.invalidateQueries({
         queryKey: userKeys.list({
