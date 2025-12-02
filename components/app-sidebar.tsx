@@ -30,7 +30,7 @@ const data = {
   teams: [
     {
       name: "TMII",
-      logo: GalleryVerticalEnd,
+      logo: "/images/tmii.png",
       plan: "Enterprise",
     },
   ],
