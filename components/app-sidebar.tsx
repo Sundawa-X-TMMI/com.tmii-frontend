@@ -59,7 +59,7 @@ const data = {
         },
         {
           title: "Akun Bank",
-          url: "bank_account",
+          url: "bank",
         },
         {
           title: "Produk",
