@@ -1,90 +1,104 @@
-import type {Table} from "@tanstack/table-core";
-import {ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight,} from "lucide-react";
-import {Button} from "@/components/ui/button";
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select";
+import type { Table } from "@tanstack/table-core";
+import {
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
 }
 
 export function DataTablePagination<TData>({
-  table,
-}: DataTablePaginationProps<TData>) {
+                                             table,
+                                           }: DataTablePaginationProps<TData>) {
   const pageSize = table.getState().pagination.pageSize;
   const pageIndex = table.getState().pagination.pageIndex;
   const total = table.getFilteredRowModel().rows.length;
+  const pageCount = table.getPageCount();
 
   const from = total === 0 ? 0 : pageIndex * pageSize + 1;
   const to = Math.min((pageIndex + 1) * pageSize, total);
+  const currentPage = pageIndex + 1;
 
   return (
     <div className="flex items-center justify-between px-2">
+      {/* Showing info */}
       <div className="text-muted-foreground flex-1 text-sm">
-        Tampilkan {from}–{to} dari {total} jumlah.
+        Showing {from}–{to} from {total} column.
       </div>
-      <div className="flex items-center space-x-6 lg:space-x-8">
-        <div className="flex items-center space-x-2">
-          <p className="text-sm font-medium">Barisan per halaman</p>
-          <Select
-            value={`${table.getState().pagination.pageSize}`}
-            onValueChange={(value) => {
-              table.setPageSize(Number(value));
-            }}
-          >
-            <SelectTrigger className="h-8 w-[70px]">
-              <SelectValue placeholder={table.getState().pagination.pageSize} />
-            </SelectTrigger>
-            <SelectContent side="top">
-              {[10, 20, 30, 40, 50].map((pageSize) => (
-                <SelectItem key={pageSize} value={`${pageSize}`}>
-                  {pageSize}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-          Halaman {table.getState().pagination.pageIndex + 1} dari{" "}
-          {table.getPageCount()}
-        </div>
-        <div className="flex items-center space-x-2">
+
+      <div className="flex items-center space-x-4">
+        {/* Previous button */}
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+          className="h-8 px-3"
+        >
+          <ChevronLeft className="mr-1 h-4 w-4" />
+          Previous
+        </Button>
+
+        {/* Page numbers in format: 1,2,...,10 */}
+        <div className="flex items-center text-sm">
+          {/* Page 1 */}
           <Button
-            variant="outline"
-            className="hidden h-8 w-8 p-0 lg:flex"
+            variant={currentPage === 1 ? "default" : "ghost"}
+            size="sm"
+            className="h-8 w-8 p-0"
             onClick={() => table.setPageIndex(0)}
-            disabled={!table.getCanPreviousPage()}
           >
-            <span className="sr-only">Pergi ke halaman utama</span>
-            <ChevronsLeft />
+            1
           </Button>
+
+          {/* Comma after page 1 */}
+          <span className="mx-1">,</span>
+
+          {/* Page 2 */}
           <Button
-            variant="outline"
+            variant={currentPage === 2 ? "default" : "ghost"}
+            size="sm"
             className="h-8 w-8 p-0"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
+            onClick={() => table.setPageIndex(1)}
           >
-            <span className="sr-only">Pergi ke halaman sebelumnya</span>
-            <ChevronLeft />
+            2
           </Button>
-          <Button
-            variant="outline"
-            className="h-8 w-8 p-0"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            <span className="sr-only">Pergi ke halaman selanjutnya</span>
-            <ChevronRight />
-          </Button>
-          <Button
-            variant="outline"
-            className="hidden h-8 w-8 p-0 lg:flex"
-            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-            disabled={!table.getCanNextPage()}
-          >
-            <span className="sr-only">Pergi ke halaman terakhir</span>
-            <ChevronsRight />
-          </Button>
+
+          {/* Ellipsis if more than 5 pages */}
+          {pageCount > 5 && (
+            <>
+              <span className="mx-1">,</span>
+              <span className="px-2">...</span>
+              <span className="mx-1">,</span>
+            </>
+          )}
+
+          {/* Last page if different from 1 or 2 */}
+          {pageCount > 2 && (
+            <Button
+              variant={currentPage === pageCount ? "default" : "ghost"}
+              size="sm"
+              className="h-8 w-8 p-0"
+              onClick={() => table.setPageIndex(pageCount - 1)}
+            >
+              {pageCount}
+            </Button>
+          )}
         </div>
+
+        {/* Next button */}
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+          className="h-8 px-3"
+        >
+          Next
+          <ChevronRight className="ml-1 h-4 w-4" />
+        </Button>
       </div>
     </div>
   );
