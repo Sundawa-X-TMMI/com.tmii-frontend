@@ -4,13 +4,13 @@ import {
   AudioWaveform,
   BookOpen,
   Bot,
-  Command,
+  Command, Database,
   Frame,
-  GalleryVerticalEnd,
+  GalleryVerticalEnd, LayoutDashboard,
   Map,
-  PieChart,
+  PieChart, Receipt,
   Settings2,
-  SquareTerminal,
+  SquareTerminal, Users,
 } from "lucide-react";
 import type * as React from "react";
 
@@ -37,57 +37,56 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "dashboard",
-      icon: Frame,
+      url: "/dashboard",
+      icon: LayoutDashboard,
     },
     {
-      title: "Masteradata",
+      title: "Master Data",
       url: "#",
-      icon: SquareTerminal,
+      icon: Database,
       items: [
         {
           title: "Wahana x Museum",
-          url: "wahana",
+          url: "/internals/wahana",
         },
         {
           title: "Anjungan",
-          url: "anjungan",
+          url: "/internals/anjungan",
         },
         {
           title: "Tenant",
-          url: "tenant",
+          url: "/internals/tenant",
         },
         {
           title: "Akun Bank",
-          url: "bank",
+          url: "/internals/bank",
         },
         {
           title: "Produk",
-          url: "produk",
+          url: "/internals/produk",
         },
       ],
     },
     {
       title: "Manajemen User",
       url: "#",
-      icon: SquareTerminal,
+      icon: Users,
       items: [
         {
-          title: "Role",
-          url: "role",
-        },
-        {
           title: "Users",
-          url: "users",
+          url: "/internals/users",
         },
       ],
     },
-  ],
-  projects: [
     {
-      name: "Transactions",
-      url: "transaction",
-      icon: Frame,
+      title: "Transactions",
+      url: "/internals/transaction",
+      icon: Receipt
+    },
+    {
+      title: "Manajemen Member",
+      url: "member",
+      icon: Users,
     },
   ],
 };
@@ -100,7 +99,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

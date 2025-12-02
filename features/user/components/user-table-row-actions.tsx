@@ -69,7 +69,7 @@ export function UserTableRowActions<TData>({
       />
       <ConfirmDialog
         title="Hapus Staf"
-        description={`Apakah Anda yakin ingin menghapus staf "${original.name}"?`}
+        description={`Apakah Anda yakin ingin menghapus "${original.name}"?`}
         open={deleteOpen}
         setOpen={setDeleteOpen}
         onConfirm={onDelete}

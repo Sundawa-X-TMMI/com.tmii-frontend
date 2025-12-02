@@ -26,7 +26,7 @@ class TransactionService {
       });
 
       const res = await Client.get<TransactionPagination, unknown>(
-        `internal/Transactions?${queryParams.toString()}`,
+        `/transaction/?${queryParams.toString()}`,
       );
 
       if (res.data.code >= 400) {
@@ -47,7 +47,7 @@ class TransactionService {
   async createTransaction(payload: CreateTransactionRequest) {
     try {
       const res = await Client.post<HttpClientTypes.Response<unknown>, unknown>(
-        "internal/Transactions",
+        "/transaction/",
         payload,
       );
 
@@ -69,7 +69,7 @@ class TransactionService {
   async updateTransaction(id: string, payload: UpdateTransactionRequest) {
     try {
       const res = await Client.put<HttpClientTypes.Response<unknown>, unknown>(
-        `internal/Transactions/${id}`,
+        `/transaction/${id}`,
         payload,
       );
 
@@ -91,7 +91,7 @@ class TransactionService {
   async deleteTransaction(id: string) {
     try {
       const res = await Client.del<HttpClientTypes.Response<unknown>, unknown>(
-        `internal/Transactions/${id}`,
+        `/transaction/${id}`,
       );
 
       if (res.data.code >= 400) {

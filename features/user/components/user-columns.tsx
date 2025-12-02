@@ -29,7 +29,7 @@ export const userColumns: ColumnDef<UserTypes.Service.UserData>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Nama Pengguna" />
+      <DataTableColumnHeader column={column} title="Nama" />
     ),
     cell: ({ row }) => (
       <span>

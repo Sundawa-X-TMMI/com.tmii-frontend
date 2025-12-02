@@ -34,7 +34,7 @@ export function UserTableToolbar<TData>({
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
         <Input
-          placeholder="Cari Data Pengguna..."
+          placeholder="Cari Data ..."
           value={search}
           onChange={(event) => setSearch(event.target.value)}
           className="h-8 w-[150px] lg:w-[250px]"
@@ -62,7 +62,7 @@ export function UserTableToolbar<TData>({
           triggerLabel={
             (
               <>
-                <Plus className="ml-2 h-4 w-4" /> Buat Staf Baru
+                <Plus className="ml-2 h-4 w-4" /> Buat Data Baru
               </>
             ) as unknown as string
           }
