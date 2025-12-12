@@ -15,14 +15,14 @@ import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage,} from "@
 import {Input} from "@/components/ui/input";
 
 const createSchema = z.object({
-  merchantName: z.string().min(1, "Nama Harus Diisi").max(255, "Nama Terlalu Panjang"),
-  productName: z.string().min(1, "Nama Harus Diisi").max(255, "Nama Terlalu Panjang"),
+  merchantName: z.string().min(1, "Nama Merchant Harus Diisi").max(255, "Nama Terlalu Panjang"),
+  productName: z.string().min(1, "Nama Produk Harus Diisi").max(255, "Nama Terlalu Panjang"),
   price: z.string().min(1, "Harga Harus Diisi").max(255, "Harga Terlalu Panjang"),
 });
 
 const updateSchema = z.object({
-  merchantName: z.string().min(1, "Nama Harus Diisi"),
-  productName: z.string().min(1, "Nama Harus Diisi"),
+  merchantName: z.string().min(1, "Nama Merchant Harus Diisi"),
+  productName: z.string().min(1, "Nama Produk Harus Diisi"),
   price: z.string().min(1, "Harga Harus Diisi"),
 });
 
@@ -36,16 +36,17 @@ interface ProductFormDialogProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   triggerLabel?: string;
+  disableMerchantName?: boolean;
 }
 
 export const ProductFormDialog = ({
-  defaultValues,
-  onSubmit,
-  open,
-  setOpen,
-  triggerLabel,
-}: ProductFormDialogProps) => {
-  const [roles, setRoles] = useState<{ label: string; value: string }[]>([]);
+                                    defaultValues,
+                                    onSubmit,
+                                    open,
+                                    setOpen,
+                                    triggerLabel,
+                                    disableMerchantName = false,
+                                  }: ProductFormDialogProps) => {
   const form = useForm<FormValues>({
     resolver: zodResolver(defaultValues ? updateSchema : createSchema),
     defaultValues: defaultValues ?? {
@@ -62,6 +63,14 @@ export const ProductFormDialog = ({
   const handleSubmit = (values: CreateFormValues | FormValues) => {
     onSubmit(values);
     setOpen(false);
+    // Reset form only if it's a create form
+    if (!defaultValues) {
+      form.reset({
+        merchantName: defaultValues?.merchantName || "",
+        productName: "",
+        price: "",
+      });
+    }
   };
 
   return (
@@ -76,12 +85,12 @@ export const ProductFormDialog = ({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {defaultValues ? "Sunting Data" : "Buat Data"}
+            {defaultValues && !disableMerchantName ? "Sunting Data Produk" : "Tambah Produk Baru"}
           </DialogTitle>
           <DialogDescription>
-            {defaultValues
-              ? "Sunting Data yang sudah ada."
-              : "Tambah Data baru ke daftar. "}
+            {defaultValues && !disableMerchantName
+              ? "Sunting Data Produk yang sudah ada."
+              : "Tambah Produk baru ke daftar."}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -94,9 +103,13 @@ export const ProductFormDialog = ({
               name="merchantName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nama Tenant</FormLabel>
+                  <FormLabel>Nama Merchant</FormLabel>
                   <FormControl>
-                    <Input placeholder="Nama Merchant" {...field} />
+                    <Input
+                      placeholder="Nama Merchant"
+                      {...field}
+                      disabled={disableMerchantName}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -109,7 +122,7 @@ export const ProductFormDialog = ({
                 <FormItem>
                   <FormLabel>Nama Produk</FormLabel>
                   <FormControl>
-                    <Input placeholder="Nama Poduk" {...field} />
+                    <Input placeholder="Nama Produk" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -128,9 +141,16 @@ export const ProductFormDialog = ({
                 </FormItem>
               )}
             />
-            <div className="flex justify-end">
+            <div className="flex justify-end gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setOpen(false)}
+              >
+                Batal
+              </Button>
               <Button type="submit">
-                {defaultValues ? "Update" : "Kirim"}
+                {defaultValues && !disableMerchantName ? "Update" : "Simpan"}
               </Button>
             </div>
           </form>

@@ -1,7 +1,7 @@
+
 import type {Row} from "@tanstack/table-core";
-import {Delete, MoreHorizontal, Pencil, Package} from "lucide-react";
+import {Delete, MoreHorizontal, Pencil} from "lucide-react";
 import {useState} from "react";
-import {useRouter} from "next/navigation";
 import {Button} from "@/components/ui/button";
 import {ConfirmDialog} from "@/components/ui/confirm-dialog";
 import {
@@ -10,43 +10,38 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {TenantTypes} from "@/types/features/tenant.type";
-import TenantData = TenantTypes.Service.TenantData;
-import UpdateTenantRequest = TenantTypes.Service.UpdateTenantRequest;
-import {TenantFormDialog} from "@/features/tenant/components/tenant-form-dialog";
-import {useDeleteTenant, useUpdateTenant} from "@/features/tenant/hooks/tenant-queries";
+import {useDeleteProduct, useUpdateProduct} from "@/features/product/hooks/product-queries";
+import {ProductTypes} from "@/types/features/product.type";
+import UpdateProductRequest = ProductTypes.Service.UpdateProductRequest;
+import ProductData = ProductTypes.Service.ProductData;
+import {ProductFormDialog} from "@/features/product/components/product-form-dialog";
 
-interface TenantTableRowActionsProps<TData> {
+interface MerchantProductTableRowActionsProps<TData> {
   row: Row<TData>;
 }
 
-function TenantTableRowActions<TData>({
-                                        row,
-                                      }: TenantTableRowActionsProps<TData>) {
-  const router = useRouter();
+function MerchantProductTableRowActions<TData>({
+                                                 row,
+                                               }: MerchantProductTableRowActionsProps<TData>) {
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
-  const updateTenant = useUpdateTenant();
-  const deleteTenant = useDeleteTenant();
+  const updateProduct = useUpdateProduct();
+  const deleteProduct = useDeleteProduct();
 
-  const original = row.original as TenantData;
+  const original = row.original as ProductData;
 
   const onUpdate = (values: unknown) => {
-    updateTenant.mutate({
+    updateProduct.mutate({
       id: original.id,
-      payload: values as UpdateTenantRequest,
+      payload: values as UpdateProductRequest,
     });
     setEditOpen(false);
   };
 
   const onDelete = () => {
-    deleteTenant.mutate(original.id);
+    deleteProduct.mutate(original.id);
     setDeleteOpen(false);
-  };
-
-  const handleNavigateToProducts = () => {
-    router.push(`/internals/tenant/${original.id}`);
   };
 
   return (
@@ -62,9 +57,6 @@ function TenantTableRowActions<TData>({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
-          <DropdownMenuItem onClick={handleNavigateToProducts}>
-            <Package size={20} /> <span>Produk</span>
-          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setEditOpen(true)}>
             <Pencil size={20} /> <span>Sunting</span>
           </DropdownMenuItem>
@@ -73,26 +65,27 @@ function TenantTableRowActions<TData>({
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-
-      <TenantFormDialog
+      <ProductFormDialog
         defaultValues={{
-          name: row.getValue("name"),
+          merchantName: original.merchantName,
+          productName: row.getValue("productName"),
+          price: row.getValue("price"),
         }}
         onSubmit={onUpdate}
         open={editOpen}
         setOpen={setEditOpen}
+        disableMerchantName={true}
       />
-
       <ConfirmDialog
-        title="Hapus Data Tenant"
-        description={`Apakah Anda yakin ingin menghapus tenant "${original.name}"? Semua produk yang terkait akan tetap ada.`}
+        title="Hapus Produk"
+        description={`Apakah Anda yakin ingin menghapus produk "${original.productName}"?`}
         open={deleteOpen}
         setOpen={setDeleteOpen}
         onConfirm={onDelete}
-        loading={deleteTenant.isPending}
+        loading={deleteProduct.isPending}
       />
     </>
   );
 }
 
-export default TenantTableRowActions;
+export default MerchantProductTableRowActions;

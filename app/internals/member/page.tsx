@@ -1,5 +1,5 @@
 import {Layout} from "@/components/layouts/layout";
-import {UserTable} from "@/features/user/components/user-table";
+import {MemberTable} from "@/features/member/components/member-table";
 
 export default function Page() {
   return (
@@ -7,7 +7,7 @@ export default function Page() {
       breadcrumbs={[
         {
           name: "Manajemen Member",
-          target: "/internal/users",
+          target: "/internal/members",
         },
       ]}
     >
@@ -19,7 +19,7 @@ export default function Page() {
             </h2>
           </div>
         </div>
-        <UserTable />
+        <MemberTable />
       </section>
     </Layout>
   );

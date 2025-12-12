@@ -1,3 +1,4 @@
+import React from "react";
 import {AppSidebar} from "@/components/app-sidebar";
 import {
   Breadcrumb,
@@ -35,20 +36,24 @@ export function Layout({ children, breadcrumbs = [] }: LayoutProps) {
             {breadcrumbs.length > 0 && (
               <Breadcrumb>
                 <BreadcrumbList>
-                  {breadcrumbs.map((item, index) => (
-                    <BreadcrumbItem key={index}>
-                      {index < breadcrumbs.length - 1 ? (
-                        <>
-                          <BreadcrumbLink href={item.target}>
-                            {item.name}
-                          </BreadcrumbLink>
-                          <BreadcrumbSeparator />
-                        </>
-                      ) : (
-                        <BreadcrumbPage>{item.name}</BreadcrumbPage>
-                      )}
-                    </BreadcrumbItem>
-                  ))}
+                  {breadcrumbs.map((item, index) => {
+                    const isLast = index === breadcrumbs.length - 1;
+
+                    return (
+                      <React.Fragment key={index}>
+                        <BreadcrumbItem>
+                          {isLast ? (
+                            <BreadcrumbPage>{item.name}</BreadcrumbPage>
+                          ) : (
+                            <BreadcrumbLink href={item.target}>
+                              {item.name}
+                            </BreadcrumbLink>
+                          )}
+                        </BreadcrumbItem>
+                        {!isLast && <BreadcrumbSeparator />}
+                      </React.Fragment>
+                    );
+                  })}
                 </BreadcrumbList>
               </Breadcrumb>
             )}
