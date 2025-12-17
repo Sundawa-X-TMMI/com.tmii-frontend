@@ -21,25 +21,25 @@ jobs:
       - name: Git Pull
         run: |
           ssh-keyscan -p 33 -t rsa ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
-          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd ~/app/com.tmmi-frontend && git pull origin main"
+          ssh -p 33 ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd ~/app/com.tmmi-frontend && git pull origin main"
           echo "Successfully pulled repo."
 
       - name: Docker Down Container
         run: |
           ssh-keyscan -p 33 -t rsa ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
-          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd ~/app/com.tmmi-frontend && docker compose down"
+          ssh -p 33 ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd ~/app/com.tmmi-frontend && docker compose down"
           echo "Successfully down the container."
 
       - name: Docker Image Build
         run: |
           ssh-keyscan -p 33 -t rsa ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
-          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd ~/app/com.tmmi-frontend && docker compose build"
+          ssh -p 33 ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd ~/app/com.tmmi-frontend && docker compose build"
           echo "Successfully build image."
 
       - name: Docker Up the Container on Background
         run: |
           ssh-keyscan -p 33 -t rsa ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
-          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd ~/app/com.tmmi-frontend && docker compose up -d"
+          ssh -p 33 ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd ~/app/com.tmmi-frontend && docker compose up -d"
           echo "Successfully deployed a services."
 
     
